@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>오뚜기 카레, 어떤 향신료로 만드나요?</title>
+<style>
+  /* ========== 오뚜기 산스 폰트 (사용자 시스템 설치 폰트 우선) ========== */
+  @font-face {
+    font-family: '오뚜기산스3N';
+    src: local('오뚜기산스3N Light'), local('OtokiSans3N-Light'), local('Otoki Sans3N Light');
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: '오뚜기산스3N';
+    src: local('오뚜기산스3N Medium'), local('OtokiSans3N-Medium'), local('Otoki Sans3N Medium');
+    font-weight: 500;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: '오뚜기산스3N';
+    src: local('오뚜기산스3N Bold'), local('OtokiSans3N-Bold'), local('Otoki Sans3N Bold');
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  /* Noto Serif KR for accent (English/Latin) */
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&display=swap');
+
+  /* ========== Design tokens (Claude warm tone) ========== */
+  :root {
+    --bg: #F5F0E8;
+    --bg-2: #EFE7DA;
+    --paper: #FAF6EE;
+    --ink: #1F1A14;
+    --ink-soft: #5C5247;
+    --ink-mute: #8B7E6E;
+    --line: #D9CDB8;
+    --line-soft: #E8DFCD;
+    --accent: #D93033;
+    --accent-deep: #A8242A;
+    --accent-soft: #F4DAD8;
+    --gold: #C8A24A;
+    --shadow-sm: 0 1px 2px rgba(60, 40, 20, 0.04), 0 2px 8px rgba(60, 40, 20, 0.04);
+    --shadow-md: 0 2px 6px rgba(60, 40, 20, 0.06), 0 12px 28px rgba(60, 40, 20, 0.08);
+    --radius: 6px;
+    --font-kr: '오뚜기산스3N', 'Noto Sans KR', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Fraunces', 'Noto Serif KR', Georgia, serif;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-kr);
+    font-weight: 400;
+    color: var(--ink);
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(217, 48, 51, 0.04), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(200, 162, 74, 0.06), transparent 60%);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* paper grain */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.4  0 0 0 0 0.3  0 0 0 0 0.15  0 0 0 0.04 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: 0.6;
+    z-index: 1;
+    mix-blend-mode: multiply;
+  }
+
+  .page { position: relative; z-index: 2; min-height: 100vh; }
+  .page[hidden] { display: none; }
+
+  /* ========================================================
+     PAGE 1 — INDEX
+     ======================================================== */
+  .p1 {
+    padding: 28px 20px 60px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .p1__brandbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 28px;
+  }
+  .p1__mark {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+  }
+  .p1__mark::before {
+    content: '';
+    display: inline-block;
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+    transform: translateY(-2px);
+  }
+  .p1__meta {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+
+  .p1__hero { margin-bottom: 36px; }
+  .p1__kicker {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin: 0 0 12px;
+    letter-spacing: 0.01em;
+  }
+  .p1__title {
+    font-family: var(--font-kr);
+    font-weight: 700;
+    font-size: clamp(28px, 8vw, 38px);
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin: 0 0 16px;
+  }
+  .p1__title .accent {
+    color: var(--accent);
+    position: relative;
+    display: inline-block;
+  }
+  .p1__title .accent::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: underline 1.2s 0.5s cubic-bezier(.65,.05,.36,1) forwards;
+  }
+  @keyframes underline { to { transform: scaleX(1); } }
+
+  .p1__lede {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: 480px;
+  }
+
+  .p1__counter {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin: 32px 0 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .p1__counter .num {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 32px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .p1__counter .label {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+
+  /* Spice grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  @media (min-width: 480px) {
+    .grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  }
+  @media (min-width: 720px) {
+    .grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .card {
+    position: relative;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 14px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(.65,.05,.36,1),
+                box-shadow 0.25s ease,
+                border-color 0.25s ease,
+                background 0.25s ease;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    font-family: inherit;
+    width: 100%;
+    color: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+    opacity: 0;
+    animation: cardIn 0.6s cubic-bezier(.65,.05,.36,1) forwards;
+  }
+  .card:nth-child(1)  { animation-delay: 0.05s; }
+  .card:nth-child(2)  { animation-delay: 0.10s; }
+  .card:nth-child(3)  { animation-delay: 0.15s; }
+  .card:nth-child(4)  { animation-delay: 0.20s; }
+  .card:nth-child(5)  { animation-delay: 0.22s; }
+  .card:nth-child(6)  { animation-delay: 0.24s; }
+  .card:nth-child(7)  { animation-delay: 0.26s; }
+  .card:nth-child(8)  { animation-delay: 0.28s; }
+  .card:nth-child(9)  { animation-delay: 0.30s; }
+  .card:nth-child(10) { animation-delay: 0.32s; }
+  .card:nth-child(11) { animation-delay: 0.34s; }
+  .card:nth-child(12) { animation-delay: 0.36s; }
+  .card:nth-child(13) { animation-delay: 0.38s; }
+  .card:nth-child(14) { animation-delay: 0.40s; }
+  .card:nth-child(15) { animation-delay: 0.42s; }
+  .card:nth-child(16) { animation-delay: 0.44s; }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card:hover, .card:focus-visible {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
+    background: #FFFCF5;
+    outline: none;
+  }
+  .card:active { transform: translateY(-1px); }
+
+  .card__num {
+    position: absolute;
+    top: 8px; left: 10px;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.05em;
+  }
+  .card__dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin: 6px auto 12px;
+    opacity: 0.85;
+    transition: transform 0.3s ease;
+  }
+  .card:hover .card__dot { transform: scale(1.4); }
+
+  .card__ko {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.2;
+    color: var(--ink);
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .card__en {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.02em;
+  }
+
+  .p1__footer {
+    margin-top: 48px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+  .p1__footer .ottogi {
+    font-family: var(--font-serif);
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0.02em;
+    font-size: 12px;
+    color: var(--accent);
+  }
+
+  /* ========================================================
+     PAGE 2 — DETAIL
+     ======================================================== */
+  .p2 {
+    padding: 20px 20px 80px;
+    max-width: 640px;
+    margin: 0 auto;
+    animation: pageIn 0.5s cubic-bezier(.65,.05,.36,1);
+  }
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .p2__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    padding: 10px 0;
+    color: var(--ink-soft);
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    margin-bottom: 14px;
+    letter-spacing: 0.01em;
+    transition: color 0.2s ease;
+  }
+  .p2__back:hover { color: var(--accent); }
+  .p2__back .arrow {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 16px;
+    transition: transform 0.2s ease;
+  }
+  .p2__back:hover .arrow { transform: translateX(-3px); }
+
+  .p2__head {
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--line);
+    padding: 22px 0 26px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .p2__crumb {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .p2__crumb .index {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--accent);
+  }
+  .p2__crumb .total {
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+  .p2__ko {
+    font-weight: 700;
+    font-size: clamp(34px, 9vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin: 0 0 6px;
+  }
+  .p2__en {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 18px;
+    color: var(--ink-soft);
+    margin: 0 0 14px;
+    letter-spacing: 0.005em;
+  }
+  .p2__sci {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-mute);
+    border-left: 2px solid var(--accent);
+    padding-left: 10px;
+    line-height: 1.5;
+  }
+
+  .p2__section { margin-bottom: 26px; }
+  .p2__label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 500;
+    margin: 0 0 10px;
+  }
+  .p2__label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line-soft);
+  }
+  .p2__label .ko-tag {
+    font-family: var(--font-kr);
+    font-size: 12px;
+    letter-spacing: -0.01em;
+    color: var(--ink-soft);
+    text-transform: none;
+    font-weight: 500;
+  }
+
+  .p2__body {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--ink);
+    margin: 0;
+    letter-spacing: -0.005em;
+  }
+
+  /* Origin chips */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    font-size: 12.5px;
+    padding: 6px 11px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+  }
+
+  /* Use cases */
+  .uses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.9;
+  }
+  .uses .item {
+    position: relative;
+    padding-left: 14px;
+  }
+  .uses .item::before {
+    content: '·';
+    position: absolute;
+    left: 4px;
+    top: -2px;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  /* Nav between spices */
+  .p2__nav {
+    display: flex;
+    gap: 10px;
+    margin-top: 36px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+  .p2__nav-btn {
+    flex: 1;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px 14px;
+    font-family: inherit;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .p2__nav-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: #FFFCF5;
+    color: var(--ink);
+  }
+  .p2__nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .p2__nav-btn .dir {
+    display: block;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+  }
+  .p2__nav-btn.next { text-align: right; }
+
+  .p2__home {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: var(--radius);
+    padding: 15px;
+    font-family: inherit;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .p2__home:hover { background: var(--accent); }
+
+  /* a11y */
+  .visually-hidden {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== PAGE 1 : INDEX ============== -->
+<main class="page p1" id="page-index">
+  <header class="p1__brandbar">
+    <span class="p1__mark">Ottogi · 오뚜기</span>
+    <span class="p1__meta">SPICE INDEX 2026</span>
+  </header>
+
+  <section class="p1__hero">
+    <p class="p1__kicker">A Sensory Archive of Curry Spices</p>
+    <h1 class="p1__title">
+      오뚜기 카레,<br>
+      <span class="accent">어떤 향신료</span>로<br>만드나요?
+    </h1>
+    <p class="p1__lede">
+      카레 한 접시를 완성하는 16가지 향신료. 각 항목을 눌러 산지, 향, 그리고 쓰임을 살펴보세요.
+    </p>
+  </section>
+
+  <div class="p1__counter">
+    <span class="num">16</span>
+    <span class="label">Spices · 향신료</span>
+  </div>
+
+  <div class="grid" id="spice-grid"></div>
+
+  <footer class="p1__footer">
+    <span>Sensory Table · 향기존</span>
+    <span class="ottogi">Ottogi</span>
+  </footer>
+</main>
+
+<!-- ============== PAGE 2 : DETAIL ============== -->
+<main class="page p2" id="page-detail" hidden>
+  <button class="p2__back" type="button" id="btn-back">
+    <span class="arrow">←</span>
+    <span>전체 향신료</span>
+  </button>
+
+  <header class="p2__head">
+    <div class="p2__crumb">
+      <span class="index" id="d-index">No. 01</span>
+      <span class="total">/ 16</span>
+    </div>
+    <h1 class="p2__ko" id="d-ko"></h1>
+    <p class="p2__en" id="d-en"></p>
+    <p class="p2__sci" id="d-sci"></p>
+  </header>
+
+  <section class="p2__section">
+    <h2 class="p2__label">Origin <span class="ko-tag">· 주산지</span></h2>
+    <div class="chips" id="d-origin"></div>
+  </section>
+
+  <section class="p2__section">
+    <h2 class="p2__label">Aroma & Taste <span class="ko-tag">· 향미</span></h2>
+    <p class="p2__body" id="d-flavor"></p>
+  </section>
+
+  <section class="p2__section">
+    <h2 class="p2__label">Uses <span class="ko-tag">· 용도</span></h2>
+    <div class="uses" id="d-uses"></div>
+  </section>
+
+  <nav class="p2__nav">
+    <button class="p2__nav-btn prev" type="button" id="btn-prev">
+      <span class="dir">← prev</span>
+      <span id="prev-label">—</span>
+    </button>
+    <button class="p2__nav-btn next" type="button" id="btn-next">
+      <span class="dir">next →</span>
+      <span id="next-label">—</span>
+    </button>
+  </nav>
+  <button class="p2__home" type="button" id="btn-home">목록으로 돌아가기</button>
+</main>
+
+<script>
+  const SPICES = [
+    { ko:'생강', en:'Ginger', sci:'Zingiber officinale Roscoe',
+      origin:['인도','서아메리카','중국','한국'],
+      flavor:'독특한 향미와 매운맛',
+      uses:['육류','해산물 요리','음료'] },
+    { ko:'너트멕', en:'Nutmeg', sci:'Myristica fragrans Houtt.',
+      origin:['인도','인도네시아'],
+      flavor:'약한 청량감 및 쓴 맛',
+      uses:['단과자','파이','소스','소시지','푸딩'] },
+    { ko:'셀러리씨드', en:'Celery Seeds', sci:'Apium graveolens L.',
+      origin:['프랑스','스페인','인도','아메리카','영국'],
+      flavor:'파슬리와 너트멕을 압축해놓은 향미, 쓴 맛',
+      uses:['가공식품 향미첨가','스프','피클','토마토 쥬스','세제','화장품'] },
+    { ko:'쿠민', en:'Cumin', sci:'Cuminum cyminum L.',
+      origin:['인도','시리아','중국','이집트'],
+      flavor:'카레에 향미를 부여하는 쓴 맛',
+      uses:['조미용','칠리분','카레분','고기요리','치즈','빵','스프','향기제품'] },
+    { ko:'후추', en:'Pepper', sci:'Piper nigrum L.',
+      origin:['인도','말레이시아','베트남','인도네시아'],
+      flavor:'강한 매운맛과 방향성 향미',
+      uses:['육류요리','피클','카레','햄','소시지'] },
+    { ko:'스타아니스', en:'Star Anise', sci:'Illicium verum Hook. f.',
+      origin:['중국 남부','베트남 북부'],
+      flavor:'달콤한 향미, 쓴 맛과 떫은 맛',
+      uses:['오리 요리','돼지고기 요리의 향미 증진'] },
+    { ko:'카르다몬', en:'Cardamom', sci:'Elettaria cardamomum (L.) Maton',
+      origin:['인도','과테말라','스리랑카','말레이시아'],
+      flavor:'외피는 달콤하고 독특한 방향성분을 지님',
+      uses:['케익','빵','쿠키','카레분','소스','커피'] },
+    { ko:'고추', en:'Chili Pepper', sci:'Capsicum annuum L.',
+      origin:['인도','멕시코','중국','한국','스페인'],
+      flavor:'강렬한 매운맛, 독특한 향미',
+      uses:['고기요리','생선요리','드레싱','소스','소시지','피클'] },
+    { ko:'아니스씨드', en:'Anise Seeds', sci:'Pimpinella anisum L.',
+      origin:['중국','멕시코','스페인'],
+      flavor:'풍부하고 달콤한 감초와 비슷한 향',
+      uses:['구강 세정제','치약','사탕'] },
+    { ko:'정향', en:'Cloves', sci:'Eugenia caryophyllata Thunb.',
+      origin:['인도네시아','마다가스카르','잔지바르'],
+      flavor:'강한 향기, 혀를 마비시키는 자극성',
+      uses:['카레','스프','햄','스튜','피클','구강청정제','과일시럽'] },
+    { ko:'시나몬', en:'Cinnamon', sci:'Cinnamomum zeylanicum Blume',
+      origin:['스리랑카','인도','인도네시아'],
+      flavor:'약간의 매운 맛과 단 맛을 수반한 청량감, 독특한 방향성',
+      uses:['케익','푸딩','잼'] },
+    { ko:'고수잎', en:'Cilantro', sci:'Coriandrum sativum L.',
+      origin:['지중해 동부 연안'],
+      flavor:'특유의 톡 쏘는 향과 쓴 맛',
+      uses:['동남아 요리','시고 달고 매운 종류의 음식'] },
+    { ko:'바질', en:'Basil', sci:'Ocimum basilicum L.',
+      origin:['인도','프랑스','미국'],
+      flavor:'향긋하며 달콤한 향',
+      uses:['토마토 요리','파스타','피자','샐러드 드레싱'] },
+    { ko:'오레가노', en:'Oregano', sci:'Origanum vulgare L.',
+      origin:['지중해지역','중앙아시아'],
+      flavor:'달콤한 향과 약간 쓴 맛',
+      uses:['소스','고기요리','수프','스튜','드레싱'] },
+    { ko:'월계수잎', en:'Bay Leaves', sci:'Laurus nobilis L.',
+      origin:['터키','그리스','포르투갈','이탈리아','모로코','프랑스'],
+      flavor:'향긋한 향',
+      uses:['피클','스튜','소스','스프','생선요리'] },
+    { ko:'로즈마리', en:'Rosemary', sci:'Rosmarinus officinalis L.',
+      origin:['남유럽','발칸반도','스페인','포르투갈'],
+      flavor:'특유의 향기가 있으며 약간 쓴 맛',
+      uses:['고기요리','스프','스튜'] },
+  ];
+
+  const pad2 = n => String(n+1).padStart(2,'0');
+
+  /* ===== Build index grid ===== */
+  const grid = document.getElementById('spice-grid');
+  SPICES.forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'card';
+    btn.setAttribute('aria-label', `${s.ko} ${s.en} 상세보기`);
+    btn.innerHTML = `
+      <span class="card__num">${pad2(i)}</span>
+      <span class="card__dot" aria-hidden="true"></span>
+      <p class="card__ko">${s.ko}</p>
+      <p class="card__en">${s.en}</p>
+    `;
+    btn.addEventListener('click', () => showDetail(i));
+    grid.appendChild(btn);
+  });
+
+  /* ===== Detail page logic ===== */
+  const pageIndex  = document.getElementById('page-index');
+  const pageDetail = document.getElementById('page-detail');
+
+  function showDetail(i) {
+    const s = SPICES[i];
+    document.getElementById('d-index').textContent = `No. ${pad2(i)}`;
+    document.getElementById('d-ko').textContent = s.ko;
+    document.getElementById('d-en').textContent = s.en;
+    document.getElementById('d-sci').textContent = s.sci;
+
+    const origin = document.getElementById('d-origin');
+    origin.innerHTML = '';
+    s.origin.forEach(o => {
+      const c = document.createElement('span');
+      c.className = 'chip';
+      c.textContent = o;
+      origin.appendChild(c);
+    });
+
+    document.getElementById('d-flavor').textContent = s.flavor;
+
+    const uses = document.getElementById('d-uses');
+    uses.innerHTML = '';
+    s.uses.forEach(u => {
+      const span = document.createElement('span');
+      span.className = 'item';
+      span.textContent = u;
+      uses.appendChild(span);
+    });
+
+    const prevBtn = document.getElementById('btn-prev');
+    const nextBtn = document.getElementById('btn-next');
+    const prevLabel = document.getElementById('prev-label');
+    const nextLabel = document.getElementById('next-label');
+
+    if (i > 0) {
+      prevBtn.disabled = false;
+      prevLabel.textContent = SPICES[i-1].ko;
+      prevBtn.onclick = () => showDetail(i-1);
+    } else {
+      prevBtn.disabled = true;
+      prevLabel.textContent = '—';
+      prevBtn.onclick = null;
+    }
+    if (i < SPICES.length - 1) {
+      nextBtn.disabled = false;
+      nextLabel.textContent = SPICES[i+1].ko;
+      nextBtn.onclick = () => showDetail(i+1);
+    } else {
+      nextBtn.disabled = true;
+      nextLabel.textContent = '—';
+      nextBtn.onclick = null;
+    }
+
+    pageIndex.hidden = true;
+    pageDetail.hidden = false;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    history.replaceState({ view: 'detail', i }, '', `#${s.en.toLowerCase().replace(/\s+/g,'-')}`);
+  }
+
+  function showIndex() {
+    pageDetail.hidden = true;
+    pageIndex.hidden = false;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    history.replaceState({ view: 'index' }, '', '#');
+  }
+
+  document.getElementById('btn-back').addEventListener('click', showIndex);
+  document.getElementById('btn-home').addEventListener('click', showIndex);
+
+  /* hash routing on load */
+  if (location.hash) {
+    const slug = location.hash.replace('#','');
+    const idx = SPICES.findIndex(s => s.en.toLowerCase().replace(/\s+/g,'-') === slug);
+    if (idx >= 0) showDetail(idx);
+  }
+</script>
+</body>
+</html>
