@@ -2,7 +2,7 @@
 
 전시 자료를 못 받은 상태에서, 현장 사진 한 장으로 QR 랜딩 페이지를 만들어버린 이야기
 
-**[→ 라이브 보기](https://yawoogi.github.io/otoki-curry-spices/)**
+**[→ 라이브 보기](https://banhangsim.github.io/otoki-curry-spices/)**
 
 ---
 
@@ -105,7 +105,7 @@ function showDetail(i) {
 | 폰트 | CSS `--font-kr` | `local()` 안 이름을 쓰려는 폰트로 바꾸면 됨 |
 | 헤로 카피 | `.p1__title` 아래 | 전시 섹션 이름으로 교체 |
 
-품목별 직접 QR이 필요하면 `https://yawoogi.github.io/otoki-curry-spices/#ginger` 같이 영문명을 소문자-대시로 바꿔 붙이면 그 품목 상세로 바로 떨어진다.
+품목별 직접 QR이 필요하면 `https://banhangsim.github.io/otoki-curry-spices/#ginger` 같이 영문명을 소문자-대시로 바꿔 붙이면 그 품목 상세로 바로 떨어진다.
 
 ---
 
